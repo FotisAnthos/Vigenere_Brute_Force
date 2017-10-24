@@ -7,12 +7,11 @@ public class Decryption {
 	public Decryption(String text) {
 		super();
 		this.res = "";
-		this.text = text;
+		this.text = text.toUpperCase();;
 	}
 
 	public String decrypt(String key) {
         String res = "";
-        text = text.toUpperCase();
         for (int i = 0, j = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (c < 'A' || c > 'Z') continue;
