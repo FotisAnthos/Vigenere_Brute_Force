@@ -6,15 +6,13 @@ public class main {
 		String key = "TURING"; //
 		String plaintext = "CONGRATULATIONSYOUSUCEEDINDECRYPTINGTHISMESSAGEITWASNOTTOOHARDAFTERALLKEEPUPTHEGOODWORKANDSPENDMORETIMEWITHCRYPTOOLANDSTUDYCAREFULLYTHEAVAILABLEBOOKSANDDONOTFORGETTHATHEBIGGESTBOOKISINTHEINTERNET";
         Encryption e = new Encryption(plaintext, key);
-        String enc = e.encrypt(plaintext, key);
+        String ciphertext = e.encrypt(plaintext, key);
         //System.out.println("Ciphertext:\n" + enc);
         System.out.println("-------------------\n");
         
         long startTime = System.currentTimeMillis();
-        //quickTest(enc, plaintext);
         
-        VigenereBF bf = new VigenereBF(enc, plaintext);
-        bf.decode();
+        new VigenereBF(ciphertext, plaintext);
         
         
         long endTime   = System.currentTimeMillis();
@@ -24,19 +22,7 @@ public class main {
         System.out.println("-------------------\nElapsed time od Decoding in hours: " + TimeUnit.MILLISECONDS.toHours(totalTime));
 	}
 	
-	private static void quickTest(String enc, String plaintext) {
-		
-        VigenereBF bf2 = new VigenereBF(enc, plaintext);
-        bf2.decodeDemo("tttttt");
-        System.out.println("0");
-        bf2.decodeDemo("aaaaaa");
-        System.out.println("1");
-        bf2.decodeDemo("turinn");
-        System.out.println("2");
-        bf2.decodeDemo("turing");
-        System.out.println("Bingo?");
-		
-	}
+	
 	
  
     
