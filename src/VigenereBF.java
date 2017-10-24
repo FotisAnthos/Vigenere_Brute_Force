@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 
 public class VigenereBF {
-	private String cyphertext;
+	private String ciphertext;
 	private Decryption d;
 	private int tries;
 	private KeyRing kr;
@@ -11,17 +11,17 @@ public class VigenereBF {
 	private Container contentPane;
 	private JTextField progressTextField;
 
-	public VigenereBF(String cyphertext, String plaintext) {
+	public VigenereBF (String ciphertext, String plaintext) {
 		super();
 		this.tries = 0;
-		this.cyphertext = cyphertext;
-		this.d = new Decryption(cyphertext);
+		this.ciphertext = ciphertext;
+		this.d = new Decryption(ciphertext);
 		this.kr = new KeyRing();
 		this.plaintext = plaintext;
 		init_gui();
 	}
 
-	private void init_gui() {
+	private void init_gui(){
 		
 
 		    frame = new JFrame();
