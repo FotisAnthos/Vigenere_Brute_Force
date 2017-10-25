@@ -7,7 +7,7 @@ public class KeyRing {
 	public KeyRing() {
 		this.h1 = 1;
 		this.h2 = 11;
-		this.h3 = 20;
+		this.h3 = 19;
 		this.i2 = 1;
 		this.i3 = 1;
 		this.i4 = 1;
@@ -20,19 +20,20 @@ public class KeyRing {
 		int curr;
 		if(name.contentEquals("h1")) {
 			curr = h1;
-			if(i2+i3+i4+i5+i6 == 45) h1++;
-			if(h1 == 11) return "End";
+			if(i2+i3+i4+i5+i6 >= 130) h1++;
+			if(h1 > 10) return "End";
 		}
 		else if(name.contentEquals("h2")) {
 			curr = h2;
-			if(i2+i3+i4+i5+i6 == 45) h2++;
-			if(h2 == 20) return "End";
+			if(i2+i3+i4+i5+i6 >= 130) h2++;
+			if(h2 > 18) return "End";
 		}
 		else if(name.contentEquals("h3")) {
 			curr = h3;
-			if(i2+i3+i4+i5+i6 == 45) h3++;
-			if(h3 == 27) return "End";
+			if(i2+i3+i4+i5+i6 >= 130) h3++;
+			if(h3 > 26) return "End";
 		}
+		
 		else {
 			System.out.println("KeyRing Failure-Not Recognising Helper");
 			return null;
@@ -40,7 +41,7 @@ public class KeyRing {
 		currentkey = getCharForNumber(curr) + getCharForNumber(i2) + getCharForNumber(i3) +
 				getCharForNumber(i4) + getCharForNumber(i5) + getCharForNumber(i6);
 		if(incrementKey() == 1) return "Done";//! to helpers
-		return currentkey;
+		return currentkey.toString().toUpperCase();
 	}
 
 	public int incrementKey(){
@@ -82,6 +83,11 @@ public class KeyRing {
 
 	private String getCharForNumber(int i) {
 		return i > 0 && i < 27 ? String.valueOf((char)(i + 'A' - 1)) : null;
+	}
+	
+	public void debug() {
+		this.h3++;
+		this.i2 = 17;
 	}
 
 }

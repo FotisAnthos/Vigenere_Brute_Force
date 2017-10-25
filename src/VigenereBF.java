@@ -1,7 +1,3 @@
-import java.awt.*;
-import java.util.ArrayList;
-
-import javax.swing.*;
 
 public class VigenereBF {
 	private String ciphertext;
@@ -9,10 +5,13 @@ public class VigenereBF {
 	private int tries;
 	private KeyRing kr;
 	private String plaintext;
-	private JFrame frame;
-	private Container contentPane;
-	private JTextField progressTextField;
+	
 	private Helper h1, h2, h3;
+	private Thread[] threads;
+	private int numThreads;
+	private Helper[] allHelpers;
+	private gui g;
+	
 
 
 	public VigenereBF (String ciphertext, String plaintext) {
@@ -20,65 +19,73 @@ public class VigenereBF {
 		this.ciphertext = ciphertext;
 		this.d = new Decryption(ciphertext);
 		this.kr = new KeyRing();
+		//this.kr.debug();to reach turing faster 
 		this.plaintext = plaintext;
-		init_gui();
+		this.numThreads = 3; //for this program, for no real reason
+		this.threads = new Thread[3];
+
+		this.g = new gui();
 
 	}
 
-	private void init_gui(){
 
 
-		frame = new JFrame();
-		frame.setBounds(200, 200, 600, 200);
-		frame.setTitle("Attack Progress");
-
-		contentPane = frame.getContentPane();
-		contentPane.setLayout(new BorderLayout());
-
-		progressTextField = new JTextField("");
-		contentPane.add(progressTextField);
-
-
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-
-
-	}
-
-	public void decode(){
+	public void decode() {
+		//Create Helpers
+		this.allHelpers = new Helper[4];
 		this.h1 = new Helper("h1", plaintext, ciphertext, kr, d, this);
+		allHelpers[0] = this.h1;
 		this.h2 = new Helper("h2", plaintext, ciphertext, kr, d, this);
+		allHelpers[1] = this.h2;
 		this.h3 = new Helper("h3", plaintext, ciphertext, kr, d, this);
+		allHelpers[2] = this.h3;
+		
+		/* create threads */
 
+		threads[0] = new Thread(h1, "h1");
+		threads[1] = new Thread(h2, "h2");
+		threads[2] = new Thread(h3, "h3");
+		
 
+		/* start them up */
 
+		System.out.println("starting threads");
 
-	}
-
-	public void updateTextField() {
-		tries++;
-		progressTextField.setText("Progress: "+tries+ "/308915776 \n"+ (308915776-tries)+ " Remaining.");
-	}
-	public void decryptionComplete(String key) {
-		progressTextField.setText("Key Found: " + key + " at " + tries + " tries.");
-		System.out.println("Key Found: " + key + " at " + tries + " tries.");
-		try {
-			h1.stops();
+		for (int i = 0; i < numThreads; ++i) {
+			threads[i].setPriority(Thread.MIN_PRIORITY);
+			threads[i].start();
 		}
-		finally {
+
+		/* wait for them to finish */
+
+		for (int i = 0; i < numThreads; ++i) {
 			try {
-				h2.stops();
+				threads[i].join();
 			}
-			finally {
+			catch (InterruptedException e) {
+				System.err.println("this should not happen");
+			}
+		}
+
+		System.out.println("threads all done");
 
 
-				try {
-					h3.stops();
-				}
-				finally {
-					progressTextField.setSelectionColor(Color.RED);
-				}
-			}
+
+	}
+
+	public void updateTextField(String akey, String name) {//beep beep
+		tries++;
+		g.setText(akey, name);
+	}
+	
+	public void decryptionComplete(String key, String name) {
+		key = "Key Found: " + key + " at " + tries + " tries.";
+		g.setText(key, name);
+		
+		System.out.println("Key Found: " + key + " at " + tries + " tries.");
+		
+		for (int i = 0; i < numThreads; ++i) {
+			allHelpers[i].stops();
 		}
 	}
 
@@ -95,29 +102,24 @@ public class VigenereBF {
 class Helper implements Runnable{
 
 	private String name;
-	private String plaintext;
-	//private String ciphertext;
+	private String plaintext;;
 	private KeyRing kr;
 	private Decryption d;
 	private VigenereBF vigi;
 	private boolean flag;
-	private Thread t;
+	
 
 	public Helper(String name, String plaintext, String ciphertext, KeyRing kr, Decryption d, VigenereBF vigi) {
 		super();
 		flag = false;
 		this.name = name;
 		this.plaintext = plaintext;
-		//this.ciphertext = ciphertext;
 		this.kr = kr;
 		this.d = d;
 		this.vigi = vigi;
 
 	}
-	public void threadStart() {
-		t = new Thread(this, name);
-		t.start();
-	}
+
 
 
 	@Override
@@ -137,16 +139,16 @@ class Helper implements Runnable{
 
 	public void oneTry(){
 		String akey = kr.getKey(this.name);
-		if(akey.equals("End")) flag = true;
-		if(akey.equals("Done")) vigi.decryptionComplete(akey);
+		vigi.updateTextField(akey, name);
+		if(akey.equals("TURING")) System.out.println("TURING reached");
+		if(akey.equals("End")) flag = true;//to end thread
+		//if(akey.equals("Done")) vigi.decryptionComplete(akey, name);
 		if(d.decrypt(akey).equals(plaintext)){
-			vigi.decryptionComplete(akey);
+			vigi.decryptionComplete(akey, name);
 			flag = true;
 		}
-		vigi.updateTextField();
-		flag = false;
 	}	
-
 }
+
 
 

@@ -1,12 +1,9 @@
 
 public class Decryption {
-	private String res;
 	private String text;
-	private String key;
 
 	public Decryption(String text) {
 		super();
-		this.res = "";
 		this.text = text.toUpperCase();
 	}
 
