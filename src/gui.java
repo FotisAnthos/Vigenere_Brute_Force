@@ -1,5 +1,7 @@
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
@@ -13,6 +15,15 @@ public class gui {
 	private JLabel t1key, t2key, t3key, lblComputing;
 
 	public gui() {
+		// Set System L&F
+				try {
+					UIManager.setLookAndFeel(
+							UIManager.getSystemLookAndFeelClassName());
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		initialize();
 	}
 
