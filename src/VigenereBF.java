@@ -1,3 +1,4 @@
+import java.util.concurrent.TimeUnit;
 
 public class VigenereBF {
 	private String ciphertext;
@@ -11,6 +12,7 @@ public class VigenereBF {
 	private int numThreads;
 	private Helper[] allHelpers;
 	private gui g;
+	private long totalTime;
 	
 
 
@@ -31,6 +33,7 @@ public class VigenereBF {
 
 
 	public void decode() {
+		long startTime = System.currentTimeMillis();
 		//Create Helpers
 		this.allHelpers = new Helper[4];
 		this.h1 = new Helper("h1", plaintext, ciphertext, kr, d, this);
@@ -68,7 +71,8 @@ public class VigenereBF {
 		}
 
 		System.out.println("threads all done");
-
+		long endTime   = System.currentTimeMillis();
+		totalTime = endTime - startTime;
 
 
 	}
@@ -82,7 +86,7 @@ public class VigenereBF {
 		key = "Key Found: " + key + " at " + tries + " tries.";
 		g.setText(key, name);
 		
-		System.out.println("Key Found: " + key + " at " + tries + " tries.");
+		System.out.println("Key Found: " + key + " at " + tries + " tries. Time: " + TimeUnit.MILLISECONDS.toMinutes(totalTime) + "mins");
 		
 		for (int i = 0; i < numThreads; ++i) {
 			allHelpers[i].stops();

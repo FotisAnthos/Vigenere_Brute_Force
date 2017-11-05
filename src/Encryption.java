@@ -1,20 +1,17 @@
 
 public class Encryption {
-	private String res;
 	private String text;
 	private String key;
 
 
 
 	public Encryption(String text, String key) {
-		super();
-		this.res = "";
 		this.text = text;
 		this.key = key;
 	}
 
 
-	public String encrypt(String text, String key) {
+	public String encrypt() {
 		String res = "";
 		text = text.toUpperCase();
 		for (int i = 0, j = 0; i < text.length(); i++) {
